@@ -1,17 +1,34 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Match, navigate } from '@reach/router'
+import create from 'zustand'
+import List from './components/List'
+import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
+import './index.css'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+// We just use a store to augment the router navigation function so that it
+// handles transition status and disable the body scroll during the transition
+// (ie animation).
+const [useStore] = create(set => ({
+  status: 'idle',
+  navigate: (address, domEl) => {
+    set({ status: 'transitioning' })
+    if (domEl) disableBodyScroll(domEl)
+    navigate(`/${address}`)
+  },
+  endNav: () => {
+    set({ status: 'idle' })
+    clearAllBodyScrollLocks()
+  }
+}))
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+export { useStore }
+
+function App() {
+  // The List component is always displayed and is passed the opened page index
+  // converted as number for conveniences
+  return <Match path="/:index">{({ match }) => <List index={match ? ~~match.index : -1} />}</Match>
+}
+
+const rootElement = document.getElementById('root')
+ReactDOM.render(<App />, rootElement)

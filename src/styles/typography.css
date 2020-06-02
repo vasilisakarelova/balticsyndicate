@@ -1,0 +1,6 @@
+@font-face {
+    font-family: 'Quiza Pro';
+    src: url('./fonts/Quizaproregular.woff') format('woff'),
+        url('./fonts/Quizaproregular.woff2') format('woff2'),
+        url('./fonts/Quizaproregular.ttf') format('truetype');
+}
