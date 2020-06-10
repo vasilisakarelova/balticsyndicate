@@ -4,3 +4,10 @@
         url('./fonts/Quizaproregular.woff2') format('woff2'),
         url('./fonts/Quizaproregular.ttf') format('truetype');
 }
+
+@font-face {
+    font-family: 'Quiza Pro Italic';
+    src: url('./fonts/Quizaproitalic.woff') format('woff'),
+        url('./fonts/Quizaproitalic.woff2') format('woff2'),
+        url('./fonts/Quizaproitalic.ttf') format('truetype');
+}

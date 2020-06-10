@@ -13,12 +13,12 @@ const DRAG_MINIMUM_SCALE = 0.9
 
 // start is the initial state
 // end is the entered state
-const startBase = { borderRadius: 16, scale: 1, opacity: 0, scroll: 0, fh: 350 }
-const endBase = { x: 0, y: 0, borderRadius: 0, scale: 1, opacity: 1, fh: 500 }
+const startBase = { scale: 1, opacity: 0, scroll: 0, fh: 350 }
+const endBase = { x: 0, y: 0, scale: 1, opacity: 1, fh: 500 }
 const defaultStart = { width: 375, x: 0, y: 0, height: 350, /*position: 'relative',*/ visibility: 'hidden' }
 
 function Page({ index, getOpenedCard, in: inProp, ...props }) {
-  const { img: cover, category, title, text, content } = data[index]
+  const { img: cover, title, content } = data[index]
   const coverRef = useRef()
   const ref = useRef(null) // Our main dom Ref
   const isDragging = useRef(false)
@@ -50,8 +50,6 @@ function Page({ index, getOpenedCard, in: inProp, ...props }) {
   // Handles page responsive mode
   useEffect(() => void transitionOver.current && set({ width: maxWidth }), [maxWidth, set])
 
-  // The function responsible for executing the entering
-  // and exiting transitions
   const execTrans = useCallback(
     done => {
       let anim
@@ -93,13 +91,14 @@ function Page({ index, getOpenedCard, in: inProp, ...props }) {
           window.scrollTo(0, 0)
         }
 
+        console.log(ref.current)
         anim = {
           from: { scroll },
           to: { ...startStyle, ...startBase },
           // We reset the onStart function
           onStart: () => {},
           // When exitining, we want also the page to scroll back to 0, hence the `onFrame` fn.
-          onFrame: ({ scroll }) => ref.current.scrollTo(0, scroll)
+          onFrame: ({ scroll }) => document.documentElement.scrollTo(0, scroll)
         }
       }
 
@@ -204,7 +203,6 @@ function Page({ index, getOpenedCard, in: inProp, ...props }) {
         else if (down)
           set({
             scale: 1 - progress * (1 - DRAG_MINIMUM_SCALE),
-            borderRadius: 16 * progress,
             immediate: true
           })
         // If the button is released, we reset the page style, and once that's done
@@ -212,7 +210,7 @@ function Page({ index, getOpenedCard, in: inProp, ...props }) {
         else
           set({
             to: async next => {
-              await next({ scale: 1, borderRadius: 0, config: config.stiff })
+              await next({ scale: 1, config: config.stiff })
               setDragging(false)
             }
           })
@@ -230,7 +228,7 @@ function Page({ index, getOpenedCard, in: inProp, ...props }) {
           return
         }
 
-        //if (transitionOver.current) set({ position: y > 0 ? 'relative' : 'fixed' })
+        if (transitionOver.current) set({ position: y > 0 ? 'relative' : 'fixed' })
 
         // This just sets the close icon to black when we're passed the cover.
         setInvertClose(y >= (coverRef.current.offsetHeight - 20 - 18))
@@ -239,12 +237,13 @@ function Page({ index, getOpenedCard, in: inProp, ...props }) {
         // we cancel the drag and reset our page style.
         if (!transitioningFromDrag.current && y >= 0 && isDragging.current) {
           setDragging(false)
-          set({ scale: 1, borderRadius: 0, immediate: true })
+          set({ scale: 1, immediate: true })
         }
       }
     },
     { domTarget: window }
   )
+
   useEffect(bind, [bind])
 
   return (
@@ -264,27 +263,43 @@ function Page({ index, getOpenedCard, in: inProp, ...props }) {
           </div>
           <a.div>
             <a.figure>
-              <img src={cover} ref={coverRef}/>
+              <img src={cover} ref={coverRef} alt='cover to the article' />
               <div className="title--wrap">
                 <div className='title--main'>
                   <h2>{title}</h2>
                 </div>
               </div>
             </a.figure>
-            <a.div className='article--content' style={{ y: fh.to(f => f - 500) }}>
+            <a.div className='article--content'>
               { content.map((item, itemIdx) => {
                   const type = Object.keys(item)[0]
 
                   if (type === 'text') {
                     return <p key={`content-${title}-${itemIdx}`} dangerouslySetInnerHTML={{ __html: item[type] }}></p>
+                  } else if (type === 'quote') {
+                    return <div className='article--content-quote' key={`content-${title}-${itemIdx}`}><p dangerouslySetInnerHTML={{ __html: item[type] }}></p></div>
                   } else if (type === 'image') {
                     return (
                       <div className='article--content-img' key={`content-${title}-${itemIdx}`}>
-                        <img src={item[type].src}/>
+                        <img src={item[type].src} alt='content related' />
                         <span className='article--content-img-label'>{item[type].label}</span>
                       </div>
                     )
+                  } else if (type === 'block') {
+                    const { image, text } = item[type]
+
+                    return (
+                      <div className='article--content-block' key={`content-${title}-${itemIdx}`}>
+                        <div className='article--content-block-img'>
+                          <img src={image.src} alt='content related'/>
+                          <span className='article--content-block-img-label'>{image.label}</span>
+                        </div>
+                        <p dangerouslySetInnerHTML={{ __html: text }}></p>
+                      </div>
+                    )
                   }
+
+                  return null
                 })
               }
             </a.div>

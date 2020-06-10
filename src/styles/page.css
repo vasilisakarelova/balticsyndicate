@@ -12,9 +12,7 @@
   position: fixed;
   width: 100%;
   height: 100vh;
-  background-color: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  background-color: rgba(255, 255, 255, 1);
 }
 
 article {
@@ -22,7 +20,6 @@ article {
   box-shadow: none;
   background: #fff;
   width: 100%;
-  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.25);
 }
 
 article > div {
@@ -238,13 +235,9 @@ article img {
 .article--content {
   position: relative;
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
   flex-direction: column;
+  align-items: flex-end;
   padding: 24px 24px 42px;
   opacity: 1;
   transition: opacity 1.2s cubic-bezier(.47,0,.745,.715),-webkit-transform 1.2s cubic-bezier(.47,0,.745,.715);
@@ -253,5 +246,80 @@ article img {
 
   @media screen and (min-width: $md) {
     padding: 2.32558vw;
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.35;
+
+    @media screen and (min-width: $md) {
+      font-size: 1.29199vw;
+      width: 39.47028vw;
+      margin-right: 2.71318vw;
+      padding-bottom: 3.97674vw;
+    }
+  }
+
+  &-block {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    @media screen and (min-width: $md) {
+      flex-direction: row;
+      padding: 3.97674vw 0;
+    }
+
+    p {
+      padding-bottom: 0 !important;
+    }
+  }
+
+  &-block-img-label {
+    position: relative;
+    display: block;
+    padding-top: 10px;
+  }
+
+  &-quote {
+    letter-spacing: -.05em;
+    position: relative;
+
+    @media screen and (min-width: $md) {
+      font-size: 3.35917vw;
+      width: 100%;
+      padding: 0 10.34884vw;
+    }
+
+    p {
+      width: 100% !important;
+
+      @media screen and (min-width: $md) {
+        font-size: 3.35917vw;
+        margin-right: 0;
+      }
+    }
+  }
+
+  &-img {
+    position: relative;
+    display: block;
+    width: 100%;
+
+    @media screen and (min-width: $md) {
+      width: 80vw;
+      padding-bottom: 3.97674vw;
+      margin: 0 auto;
+    }
+  }
+
+  &-img-label {
+    position: relative;
+    display: block;
+    padding-top: 10px;
   }
 }

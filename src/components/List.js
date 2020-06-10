@@ -61,7 +61,6 @@ export default function List({ index }) {
   }
 
   useEffect(() => {
-    console.log(idle)
     if (idle) {
       mainRef.current.classList.remove('frozen')
       mainRef.current.style.width = ''
@@ -99,17 +98,18 @@ export default function List({ index }) {
               y={0}
               dragBoundFunc={(pos) => {
                 const layerHeight = layer.current.getClientRect().height
+                const layerWidth = layer.current.getClientRect().width
                 const stageHeight = stage.current.attrs.height
+                const stageWidth = stage.current.attrs.width
                 const bound = 100
                 const bottomBoundReached = (-(layerHeight - stageHeight + bound)) > pos.y
                 const topBoundReached = pos.y > bound
                 const leftBoundReached = Math.abs(centerGroupX) + bound < pos.x
                 const rightBoundReached = (centerGroupX - bound) > pos.x
+                // (layerWidth - stageWidth + centerGroupX + bound) < Math.abs(pos.x)
 
                 let newY = bottomBoundReached ? (-(layerHeight - stageHeight + bound)) : topBoundReached ? bound : pos.y
                 let newX = leftBoundReached ? Math.abs(centerGroupX) + bound : rightBoundReached ? (centerGroupX - bound) : pos.x
-
-                // back.current.setAbsolutePosition({x: 0, y: 0})
 
                 return {
                   x: newX,
@@ -117,13 +117,6 @@ export default function List({ index }) {
                 }
               }}
             >
-              {/*<Rect
-                ref={back}
-                fill={'red'}
-                width={window.innerWidth}
-                height={window.innerHeight}
-              />*/}
-
               {data.map((_, i) => (
                 <URLImage ref={n => addCardNode(n, i)} key={i} idx={i} data={_} onClick={onCardClick} />
               ))}
