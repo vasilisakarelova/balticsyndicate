@@ -237,7 +237,7 @@ article img {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   padding: 24px 24px 42px;
   opacity: 1;
   transition: opacity 1.2s cubic-bezier(.47,0,.745,.715),-webkit-transform 1.2s cubic-bezier(.47,0,.745,.715);
@@ -255,7 +255,7 @@ article img {
 
     @media screen and (min-width: $md) {
       font-size: 1.29199vw;
-      width: 39.47028vw;
+      width: 49.47028vw;
       margin-right: 2.71318vw;
       padding-bottom: 3.97674vw;
     }
@@ -286,7 +286,8 @@ article img {
   }
 
   &-quote {
-    letter-spacing: -.05em;
+    font-family: 'Quiza Pro Italic';
+    letter-spacing: -.01em;
     position: relative;
 
     @media screen and (min-width: $md) {
